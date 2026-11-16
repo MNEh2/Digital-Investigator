@@ -1,0 +1,1708 @@
+```html
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>المحقق الرقمي | Digital Detective</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+
+:root {
+    --bg: #07111f;
+    --bg2: #0b1b2e;
+    --card: #10243a;
+    --cyan: #73e5ff;
+    --blue: #4b9dff;
+    --purple: #9295ff;
+    --text: #f0f7ff;
+    --muted: #91a8c0;
+    --border: rgba(115,229,255,0.15);
+    --success: #6ee7b7;
+    --danger: #fda4af;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Cairo', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+button, input {
+    font-family: inherit;
+}
+
+button {
+    cursor: pointer;
+}
+
+.background-glow {
+    position: fixed;
+    width: 500px;
+    height: 500px;
+    background: rgba(44,129,255,0.08);
+    filter: blur(130px);
+    border-radius: 50%;
+    top: 10%;
+    left: -150px;
+    z-index: -1;
+    pointer-events: none;
+}
+
+/* شريط التنقل */
+
+.navbar {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+    padding: 15px 6%;
+    background: rgba(7,17,31,0.88);
+    backdrop-filter: blur(18px);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: 800;
+    font-size: 20px;
+    color: var(--cyan);
+}
+
+.logo-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 13px;
+    background: linear-gradient(135deg,#1d75a7,#5366d8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 22px;
+}
+
+.nav-links {
+    display: flex;
+    gap: 10px;
+}
+
+.nav-btn {
+    border: none;
+    background: transparent;
+    color: var(--muted);
+    padding: 10px 18px;
+    border-radius: 12px;
+    font-size: 14px;
+    transition: 0.3s;
+}
+
+.nav-btn:hover,
+.nav-btn.active {
+    background: rgba(115,229,255,0.1);
+    color: var(--cyan);
+}
+
+.score-pill {
+    background: rgba(255,214,102,0.08);
+    border: 1px solid rgba(255,214,102,0.2);
+    color: #ffd666;
+    padding: 8px 16px;
+    border-radius: 30px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+/* الصفحات */
+
+.page {
+    display: none;
+    min-height: 100vh;
+    padding-top: 100px;
+}
+
+.page.active {
+    display: block;
+    animation: pageEnter 0.4s ease;
+}
+
+@keyframes pageEnter {
+    from {
+        opacity: 0;
+        transform: translateY(15px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* الصفحة الرئيسية */
+
+.home {
+    padding-top: 80px;
+}
+
+.hero {
+    min-height: calc(100vh - 80px);
+    padding: 60px 8%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    position: relative;
+
+    background:
+    linear-gradient(180deg,rgba(7,17,31,0.35),rgba(7,17,31,0.92)),
+    linear-gradient(90deg,rgba(7,17,31,0.6),rgba(7,17,31,0.25)),
+    url("https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1920&q=85");
+
+    background-size: cover;
+    background-position: center;
+}
+
+.hero-content {
+    max-width: 850px;
+}
+
+.hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 18px;
+    border: 1px solid rgba(115,229,255,0.25);
+    background: rgba(8,24,43,0.65);
+    border-radius: 40px;
+    color: var(--cyan);
+    font-size: 13px;
+    margin-bottom: 25px;
+}
+
+.status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--success);
+    box-shadow: 0 0 10px var(--success);
+}
+
+.hero h1 {
+    font-size: clamp(40px,7vw,76px);
+    font-weight: 800;
+    line-height: 1.4;
+    margin-bottom: 20px;
+    background: linear-gradient(135deg,#fff,#8be9fd,#91a8ff);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.hero p {
+    font-size: 18px;
+    line-height: 2.2;
+    color: #d1e4f7;
+    max-width: 700px;
+    margin: 0 auto 35px;
+}
+
+.primary-btn {
+    border: none;
+    background: linear-gradient(135deg,#68dfff,#6489ff);
+    color: #061323;
+    padding: 15px 30px;
+    border-radius: 14px;
+    font-weight: 800;
+    font-size: 15px;
+    transition: 0.3s;
+    box-shadow: 0 8px 25px rgba(75,157,255,0.18);
+}
+
+.primary-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 30px rgba(75,157,255,0.35);
+}
+
+.secondary-btn {
+    border: 1px solid var(--border);
+    background: rgba(16,36,58,0.7);
+    color: var(--text);
+    padding: 13px 25px;
+    border-radius: 14px;
+    font-weight: 600;
+    transition: 0.3s;
+}
+
+.secondary-btn:hover {
+    border-color: var(--cyan);
+    color: var(--cyan);
+}
+
+.hero-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.stats {
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    max-width: 750px;
+    margin: 55px auto 0;
+    gap: 15px;
+}
+
+.stat {
+    padding: 22px;
+    background: rgba(8,24,43,0.7);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+}
+
+.stat h3 {
+    color: var(--cyan);
+    font-size: 30px;
+}
+
+.stat p {
+    font-size: 13px;
+    color: var(--muted);
+    margin: 5px 0 0;
+}
+
+/* محتوى الصفحات */
+
+.container {
+    width: 90%;
+    max-width: 1200px;
+    margin: auto;
+    padding: 40px 0 80px;
+}
+
+.page-heading {
+    margin-bottom: 40px;
+}
+
+.page-heading .tag {
+    color: var(--cyan);
+    font-size: 13px;
+    margin-bottom: 10px;
+}
+
+.page-heading h2 {
+    font-size: clamp(28px,4vw,42px);
+    font-weight: 800;
+    margin-bottom: 12px;
+}
+
+.page-heading p {
+    color: var(--muted);
+    line-height: 2;
+}
+
+/* المهمات */
+
+.missions-grid {
+    display: grid;
+    grid-template-columns: repeat(2,1fr);
+    gap: 25px;
+}
+
+.mission-card {
+    background: linear-gradient(145deg,#10243a,#0c1c30);
+    border: 1px solid var(--border);
+    border-radius: 22px;
+    overflow: hidden;
+    transition: 0.35s;
+}
+
+.mission-card:hover {
+    transform: translateY(-7px);
+    border-color: rgba(115,229,255,0.5);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+}
+
+.mission-image {
+    height: 220px;
+    position: relative;
+    overflow: hidden;
+}
+
+.mission-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: 0.5s;
+    opacity: 0.8;
+}
+
+.mission-card:hover .mission-image img {
+    transform: scale(1.05);
+    opacity: 1;
+}
+
+.mission-image::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(0deg,#10243a,transparent);
+    pointer-events: none;
+}
+
+.mission-number {
+    position: absolute;
+    top: 18px;
+    right: 18px;
+    z-index: 2;
+    background: rgba(7,17,31,0.8);
+    color: var(--cyan);
+    border: 1px solid var(--border);
+    padding: 7px 13px;
+    border-radius: 10px;
+    font-size: 12px;
+}
+
+.mission-content {
+    padding: 25px;
+}
+
+.mission-content h3 {
+    font-size: 23px;
+    margin-bottom: 12px;
+}
+
+.mission-content p {
+    color: var(--muted);
+    font-size: 14px;
+    line-height: 2;
+    margin-bottom: 22px;
+}
+
+.mission-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+}
+
+.mission-points {
+    color: #ffd666;
+    font-size: 13px;
+}
+
+.mission-status {
+    color: var(--success);
+    font-size: 12px;
+    margin-top: 12px;
+}
+
+/* الاختبار */
+
+.quiz-card {
+    max-width: 800px;
+    margin: auto;
+    background: linear-gradient(145deg,#10243a,#0b1b2e);
+    border: 1px solid var(--border);
+    border-radius: 25px;
+    padding: 35px;
+    position: relative;
+    z-index: 2;
+}
+
+.quiz-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 25px;
+    flex-wrap: wrap;
+}
+
+.quiz-label {
+    color: var(--cyan);
+    font-weight: bold;
+}
+
+.quiz-count {
+    color: var(--muted);
+    font-size: 14px;
+}
+
+.progress-track {
+    width: 100%;
+    height: 7px;
+    background: #20364f;
+    border-radius: 20px;
+    margin-bottom: 35px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg,#55d9ff,#7f89ff);
+    border-radius: 20px;
+    transition: width 0.4s;
+}
+
+.question {
+    font-size: 22px;
+    line-height: 2;
+    font-weight: 700;
+    margin-bottom: 28px;
+}
+
+/* إصلاح أزرار الإجابات */
+
+.answers {
+    display: grid;
+    gap: 13px;
+    position: relative;
+    z-index: 10;
+    pointer-events: auto;
+}
+
+.answer-option {
+    width: 100%;
+    display: block;
+    text-align: right;
+    padding: 17px 20px;
+    background: #142a43;
+    border: 1px solid #29435e;
+    border-radius: 14px;
+    color: var(--text);
+    font-size: 15px;
+    transition: 0.25s;
+    position: relative;
+    z-index: 11;
+    pointer-events: auto !important;
+    cursor: pointer;
+}
+
+.answer-option:hover:not(:disabled) {
+    background: #1c3b5c;
+    border-color: var(--cyan);
+    transform: translateX(-3px);
+}
+
+.answer-option:disabled {
+    cursor: default;
+    opacity: 1;
+}
+
+.answer-option.correct {
+    border-color: var(--success);
+    background: rgba(110,231,183,0.1);
+    color: var(--success);
+}
+
+.answer-option.wrong {
+    border-color: var(--danger);
+    background: rgba(253,164,175,0.08);
+    color: var(--danger);
+}
+
+.feedback {
+    margin-top: 20px;
+    padding: 15px;
+    border-radius: 12px;
+    line-height: 1.9;
+    display: none;
+}
+
+.feedback.show {
+    display: block;
+}
+
+.feedback.good {
+    color: var(--success);
+    background: rgba(110,231,183,0.08);
+    border: 1px solid rgba(110,231,183,0.2);
+}
+
+.feedback.bad {
+    color: var(--danger);
+    background: rgba(253,164,175,0.08);
+    border: 1px solid rgba(253,164,175,0.2);
+}
+
+.quiz-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 25px;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+#nextQuestionBtn {
+    display: none;
+}
+
+/* النتيجة */
+
+.result-card {
+    text-align: center;
+    padding: 45px 25px;
+}
+
+.result-icon {
+    font-size: 65px;
+    margin-bottom: 20px;
+}
+
+.result-card h2 {
+    color: var(--cyan);
+    font-size: 32px;
+    margin-bottom: 15px;
+}
+
+.result-card p {
+    color: var(--muted);
+    line-height: 2;
+    margin-bottom: 25px;
+}
+
+/* الشهادة */
+
+.certificate-wrap {
+    max-width: 800px;
+    margin: auto;
+}
+
+.certificate-input-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 30px;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.certificate-input-card p {
+    color: var(--muted);
+    margin-bottom: 20px;
+}
+
+.name-input {
+    width: 100%;
+    max-width: 400px;
+    padding: 14px;
+    border-radius: 12px;
+    border: 1px solid #29435e;
+    background: #081426;
+    color: white;
+    text-align: center;
+    font-size: 16px;
+    margin-bottom: 20px;
+    outline: none;
+}
+
+.name-input:focus {
+    border-color: var(--cyan);
+}
+
+.certificate-paper {
+    background: linear-gradient(135deg,#f5fbff,#e8f4ff);
+    color: #0c2340;
+    padding: 45px;
+    border: 8px double #7ba8d9;
+    border-radius: 12px;
+    text-align: center;
+    display: none;
+}
+
+.certificate-paper.show {
+    display: block;
+}
+
+.certificate-paper h2 {
+    font-size: 35px;
+    color: #1b5b9c;
+    margin-bottom: 10px;
+}
+
+.certificate-paper h3 {
+    font-size: 28px;
+    color: #0c2340;
+    margin: 25px 0;
+}
+
+.certificate-paper p {
+    line-height: 2.2;
+    font-size: 17px;
+}
+
+.certificate-seal {
+    font-size: 45px;
+    margin: 20px;
+}
+
+/* الفوتر */
+
+footer {
+    padding: 25px;
+    border-top: 1px solid var(--border);
+    text-align: center;
+    color: var(--muted);
+    font-size: 13px;
+}
+
+/* الجوال */
+
+@media (max-width: 800px) {
+
+    .missions-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .nav-links {
+        gap: 2px;
+    }
+
+    .nav-btn {
+        padding: 8px;
+        font-size: 12px;
+    }
+
+    .logo {
+        font-size: 15px;
+    }
+
+    .logo-icon {
+        width: 35px;
+        height: 35px;
+    }
+
+    .score-pill {
+        display: none;
+    }
+
+    .hero p {
+        font-size: 15px;
+    }
+
+    .stats {
+        grid-template-columns: 1fr;
+        max-width: 300px;
+    }
+
+    .quiz-card {
+        padding: 22px;
+    }
+
+    .question {
+        font-size: 18px;
+    }
+
+    .certificate-paper {
+        padding: 25px;
+    }
+}
+
+@media print {
+
+    body {
+        background: white;
+    }
+
+    .navbar,
+    .background-glow,
+    footer,
+    .certificate-input-card,
+    .page-heading {
+        display: none !important;
+    }
+
+    #certificatePage {
+        display: block !important;
+        padding: 0 !important;
+    }
+
+    .container {
+        width: 100%;
+        padding: 0;
+    }
+
+    .certificate-paper {
+        display: block !important;
+        border: 8px double #7ba8d9;
+        margin: 0;
+    }
+
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="background-glow"></div>
+
+<!-- شريط التنقل -->
+
+<nav class="navbar">
+
+    <div class="logo">
+        <div class="logo-icon">🔎</div>
+        المحقق الرقمي
+    </div>
+
+    <div class="nav-links">
+
+        <button class="nav-btn active" onclick="showPage('homePage')">
+            الرئيسية
+        </button>
+
+        <button class="nav-btn" onclick="showPage('missionsPage')">
+            المهمات
+        </button>
+
+        <button class="nav-btn" onclick="showPage('certificatePage')">
+            الشهادة
+        </button>
+
+    </div>
+
+    <div class="score-pill">
+        🏆 <span id="navScore">0</span> نقطة
+    </div>
+
+</nav>
+
+<!-- الصفحة الرئيسية -->
+
+<section class="page home active" id="homePage">
+
+    <div class="hero">
+
+        <div class="hero-content">
+
+            <div class="hero-badge">
+                <span class="status-dot"></span>
+                منصة توعوية للأمن السيبراني
+            </div>
+
+            <h1>المحقق الرقمي</h1>
+
+            <p>
+                في عالم مليء بالأسرار الرقمية، تبدأ مهمتك.<br>
+                اكتشف الرسائل المشبوهة، اختبر قوة كلمات المرور،
+                وتعلم كيف تحمي بياناتك من المخاطر الإلكترونية.
+            </p>
+
+            <div class="hero-buttons">
+
+                <button class="primary-btn" onclick="showPage('missionsPage')">
+                    ابدأ التحقيق الآن ←
+                </button>
+
+                <button class="secondary-btn" onclick="showPage('certificatePage')">
+                    🏅 شهادة الإنجاز
+                </button>
+
+            </div>
+
+            <div class="stats">
+
+                <div class="stat">
+                    <h3>04</h3>
+                    <p>مهمات رقمية</p>
+                </div>
+
+                <div class="stat">
+                    <h3>12</h3>
+                    <p>سؤالًا تفاعليًا</p>
+                </div>
+
+                <div class="stat">
+                    <h3>120</h3>
+                    <p>نقطة متاحة</p>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- صفحة المهمات -->
+
+<section class="page" id="missionsPage">
+
+    <div class="container">
+
+        <div class="page-heading">
+
+            <div class="tag">MISSION CENTER / 01</div>
+
+            <h2>مركز المهمات</h2>
+
+            <p>
+                اختر مهمتك وابدأ رحلة اكتشاف المخاطر الرقمية.
+                كل مهمة تحتوي على ثلاثة أسئلة تفاعلية.
+            </p>
+
+        </div>
+
+        <div class="missions-grid">
+
+            <!-- المهمة الأولى -->
+
+            <div class="mission-card">
+
+                <div class="mission-image">
+
+                    <img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=900&q=85" alt="الأمن السيبراني">
+
+                    <div class="mission-number">MISSION 01</div>
+
+                </div>
+
+                <div class="mission-content">
+
+                    <h3>🎣 كشف التصيد الإلكتروني</h3>
+
+                    <p>
+                        تعلم اكتشاف الرسائل الاحتيالية والتعرف
+                        على العلامات التي تكشف محاولات التصيد.
+                    </p>
+
+                    <div class="mission-footer">
+
+                        <span class="mission-points">⭐ 30 نقطة</span>
+
+                        <button class="primary-btn" onclick="startMission(1)">
+                            دخول المهمة ←
+                        </button>
+
+                    </div>
+
+                    <div class="mission-status" id="status1"></div>
+
+                </div>
+
+            </div>
+
+            <!-- المهمة الثانية -->
+
+            <div class="mission-card">
+
+                <div class="mission-image">
+
+                    <img src="https://www.it.unlv.edu/sites/default/files/hero/image/password-manager-hero_0.jpg" alt="كلمة المرور">
+
+                    <div class="mission-number">MISSION 02</div>
+
+                </div>
+
+                <div class="mission-content">
+
+                    <h3>🔑 قوة كلمة المرور</h3>
+
+                    <p>
+                        اكتشف خصائص كلمات المرور القوية
+                        وتعلم كيفية حماية حساباتك.
+                    </p>
+
+                    <div class="mission-footer">
+
+                        <span class="mission-points">⭐ 30 نقطة</span>
+
+                        <button class="primary-btn" onclick="startMission(2)">
+                            دخول المهمة ←
+                        </button>
+
+                    </div>
+
+                    <div class="mission-status" id="status2"></div>
+
+                </div>
+
+            </div>
+
+            <!-- المهمة الثالثة -->
+
+            <div class="mission-card">
+
+                <div class="mission-image">
+
+                    <img src="https://images.unsplash.com/photo-1563013544-824ae1b704d3?auto=format&fit=crop&w=900&q=85" alt="الروابط">
+
+                    <div class="mission-number">MISSION 03</div>
+
+                </div>
+
+                <div class="mission-content">
+
+                    <h3>🔗 تحليل الروابط المشبوهة</h3>
+
+                    <p>
+                        تعرف على طرق التحقق من الروابط
+                        قبل فتحها أو مشاركة بياناتك.
+                    </p>
+
+                    <div class="mission-footer">
+
+                        <span class="mission-points">⭐ 30 نقطة</span>
+
+                        <button class="primary-btn" onclick="startMission(3)">
+                            دخول المهمة ←
+                        </button>
+
+                    </div>
+
+                    <div class="mission-status" id="status3"></div>
+
+                </div>
+
+            </div>
+
+            <!-- المهمة الرابعة -->
+
+            <div class="mission-card">
+
+                <div class="mission-image">
+
+                    <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=900&q=85" alt="حماية البيانات">
+
+                    <div class="mission-number">MISSION 04</div>
+
+                </div>
+
+                <div class="mission-content">
+
+                    <h3>🛡️ حماية البيانات</h3>
+
+                    <p>
+                        اكتشف أهمية التشفير والنسخ الاحتياطي
+                        في حماية المعلومات الرقمية.
+                    </p>
+
+                    <div class="mission-footer">
+
+                        <span class="mission-points">⭐ 30 نقطة</span>
+
+                        <button class="primary-btn" onclick="startMission(4)">
+                            دخول المهمة ←
+                        </button>
+
+                    </div>
+
+                    <div class="mission-status" id="status4"></div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- صفحة الأسئلة -->
+
+<section class="page" id="quizPage">
+
+    <div class="container">
+
+        <div class="page-heading">
+
+            <div class="tag">DIGITAL INVESTIGATION / 02</div>
+
+            <h2 id="quizPageTitle">مهمة التحقيق</h2>
+
+            <p>اقرأ السؤال بعناية واختر الإجابة الصحيحة.</p>
+
+        </div>
+
+        <div class="quiz-card">
+
+            <div class="quiz-top">
+
+                <span class="quiz-label" id="quizMissionLabel">
+                    🔎 المهمة الأولى
+                </span>
+
+                <span class="quiz-count" id="quizCount">
+                    السؤال 1 من 3
+                </span>
+
+            </div>
+
+            <div class="progress-track">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+
+            <div class="question" id="questionText"></div>
+
+            <div class="answers" id="answers"></div>
+
+            <div class="feedback" id="feedback"></div>
+
+            <div class="quiz-actions">
+
+                <button class="secondary-btn" onclick="showPage('missionsPage')">
+                    ← العودة للمهمات
+                </button>
+
+                <button class="primary-btn" id="nextQuestionBtn" onclick="nextQuestion()">
+                    السؤال التالي ←
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- صفحة النتيجة -->
+
+<section class="page" id="resultPage">
+
+    <div class="container">
+
+        <div class="quiz-card result-card">
+
+            <div class="result-icon">🏆</div>
+
+            <h2>أحسنت يا محقق!</h2>
+
+            <p id="resultMessage">
+                لقد أنهيت المهمة بنجاح.
+            </p>
+
+            <p>
+                النقاط المكتسبة في هذه المهمة:
+                <strong id="missionEarned" style="color:#ffd666">0</strong>
+            </p>
+
+            <p>
+                مجموع نقاطك:
+                <strong id="totalEarned" style="color:#73e5ff">0</strong>
+            </p>
+
+            <div class="hero-buttons">
+
+                <button class="primary-btn" onclick="showPage('missionsPage')">
+                    العودة إلى المهمات
+                </button>
+
+                <button class="secondary-btn" onclick="showPage('certificatePage')">
+                    عرض الشهادة
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- صفحة الشهادة -->
+
+<section class="page" id="certificatePage">
+
+    <div class="container">
+
+        <div class="page-heading">
+
+            <div class="tag">ACHIEVEMENT / 03</div>
+
+            <h2>شهادة المحقق الرقمي</h2>
+
+            <p>
+                أدخل اسمك لإنشاء شهادة إنجاز.
+            </p>
+
+        </div>
+
+        <div class="certificate-wrap">
+
+            <div class="certificate-input-card">
+
+                <p>اكتب اسم المحقق الذي سيظهر على الشهادة</p>
+
+                <input
+                    type="text"
+                    class="name-input"
+                    id="studentName"
+                    placeholder="اسم المحقق"
+                >
+
+                <br>
+
+                <button class="primary-btn" onclick="generateCertificate()">
+                    إنشاء الشهادة ✨
+                </button>
+
+            </div>
+
+            <div class="certificate-paper" id="certificatePaper">
+
+                <div class="certificate-seal">🏅</div>
+
+                <h2>شهادة إنجاز</h2>
+
+                <p>منصة المحقق الرقمي</p>
+
+                <br>
+
+                <p>تُمنح هذه الشهادة إلى</p>
+
+                <h3 id="certificateName">اسم المحقق</h3>
+
+                <p>
+                    تقديرًا لمشاركته في رحلة المحقق الرقمي،
+                    وإتمامه التحديات التوعوية في مجال الأمن السيبراني،
+                    وتعلمه أساسيات حماية البيانات والوعي الرقمي.
+                </p>
+
+                <br>
+
+                <p>
+                    مجموع النقاط:
+                    <strong id="certificatePoints">0</strong>
+                </p>
+
+                <div class="certificate-seal">🔐</div>
+
+                <p>مع تمنياتنا بمستقبل رقمي آمن</p>
+
+                <br>
+
+                <button class="primary-btn" onclick="window.print()">
+                    طباعة الشهادة
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<footer>
+    المحقق الرقمي © 2026 — رحلة نحو عالم رقمي آمن
+</footer>
+
+<script>
+
+/* ================= بيانات المهمات ================= */
+
+const missions = {
+
+    1: {
+        title: "كشف التصيد الإلكتروني",
+        icon: "🎣",
+
+        questions: [
+
+            {
+                question: "وصلتك رسالة تقول: فزت بجائزة! اضغط الرابط وأدخل كلمة مرورك. ماذا تفعل؟",
+
+                answers: [
+                    "أضغط الرابط فورًا",
+                    "أدخل كلمة المرور",
+                    "أتجاهل الرسالة وأتحقق من مصدرها"
+                ],
+
+                correct: 2,
+
+                explanation: "التحقق من مصدر الرسالة يساعد على تجنب التصيد الإلكتروني."
+            },
+
+            {
+                question: "ما العلامة التي قد تدل على أن الرسالة احتيالية؟",
+
+                answers: [
+                    "طلب معلومات شخصية بشكل عاجل",
+                    "وجود تحية في الرسالة",
+                    "إرسال رسالة من شخص تعرفه"
+                ],
+
+                correct: 0,
+
+                explanation: "الرسائل التي تضغط عليك لإرسال معلوماتك قد تكون محاولة احتيال."
+            },
+
+            {
+                question: "وصلتك رسالة من بنك تطلب كلمة مرور حسابك. ما التصرف الصحيح؟",
+
+                answers: [
+                    "إرسال كلمة المرور",
+                    "عدم مشاركة كلمة المرور والتواصل مع البنك من مصدر رسمي",
+                    "الرد على الرسالة"
+                ],
+
+                correct: 1,
+
+                explanation: "لا تشارك كلمة المرور، وتحقق دائمًا عبر القنوات الرسمية."
+            }
+
+        ]
+    },
+
+    2: {
+        title: "قوة كلمة المرور",
+        icon: "🔑",
+
+        questions: [
+
+            {
+                question: "أي كلمة مرور تعتبر أقوى؟",
+
+                answers: [
+                    "123456",
+                    "password",
+                    "R7@m!Q9z#2"
+                ],
+
+                correct: 2,
+
+                explanation: "كلمة المرور القوية تتضمن تنوعًا في الأحرف والأرقام والرموز."
+            },
+
+            {
+                question: "ما أفضل طريقة لحماية حساباتك؟",
+
+                answers: [
+                    "استخدام كلمة مرور واحدة لكل الحسابات",
+                    "استخدام كلمة مرور قوية ومختلفة لكل حساب",
+                    "مشاركة كلمة المرور مع الأصدقاء"
+                ],
+
+                correct: 1,
+
+                explanation: "استخدام كلمات مرور مختلفة يقلل من خطر اختراق الحسابات الأخرى."
+            },
+
+            {
+                question: "ماذا تفعل إذا كانت كلمة مرورك سهلة التخمين؟",
+
+                answers: [
+                    "أتركها كما هي",
+                    "أشاركها مع أصدقائي",
+                    "أغيرها إلى كلمة مرور قوية وفريدة"
+                ],
+
+                correct: 2,
+
+                explanation: "تغيير كلمة المرور الضعيفة إلى كلمة أقوى يحسن حماية الحساب."
+            }
+
+        ]
+    },
+
+    3: {
+        title: "تحليل الروابط المشبوهة",
+        icon: "🔗",
+
+        questions: [
+
+            {
+                question: "وصلك رابط من مصدر مجهول يطلب بياناتك. ماذا تفعل؟",
+
+                answers: [
+                    "أفتحه وأدخل بياناتي",
+                    "أتحقق من الرابط ولا أدخل بياناتي",
+                    "أرسله لأصدقائي"
+                ],
+
+                correct: 1,
+
+                explanation: "تحقق من مصدر الرابط قبل فتحه أو إدخال أي بيانات."
+            },
+
+            {
+                question: "ما التصرف الصحيح عند رؤية رابط غريب؟",
+
+                answers: [
+                    "الضغط عليه مباشرة",
+                    "تحميل الملفات منه",
+                    "التحقق من مصدر الرابط قبل فتحه"
+                ],
+
+                correct: 2,
+
+                explanation: "التحقق من مصدر الرابط يساعد على تجنب المواقع المشبوهة."
+            },
+
+            {
+                question: "كيف تتأكد من الموقع الذي تريد تسجيل الدخول إليه؟",
+
+                answers: [
+                    "أتحقق من عنوان الموقع الرسمي",
+                    "أعتمد على شكل الموقع فقط",
+                    "أدخل بياناتي في أي موقع"
+                ],
+
+                correct: 0,
+
+                explanation: "تحقق من عنوان الموقع بعناية ولا تعتمد على التصميم وحده."
+            }
+
+        ]
+    },
+
+    4: {
+        title: "حماية البيانات",
+        icon: "🛡️",
+
+        questions: [
+
+            {
+                question: "ما فائدة النسخ الاحتياطي للبيانات؟",
+
+                answers: [
+                    "حذف الملفات",
+                    "استعادة الملفات عند فقدانها",
+                    "إضعاف كلمة المرور"
+                ],
+
+                correct: 1,
+
+                explanation: "النسخ الاحتياطي يساعد على استعادة الملفات عند فقدانها."
+            },
+
+            {
+                question: "ما المقصود بتشفير البيانات؟",
+
+                answers: [
+                    "حذف البيانات نهائيًا",
+                    "نشر البيانات للجميع",
+                    "تحويل البيانات إلى صيغة تحميها من غير المصرح لهم"
+                ],
+
+                correct: 2,
+
+                explanation: "التشفير يجعل البيانات غير مفهومة لمن لا يملك صلاحية فكها."
+            },
+
+            {
+                question: "أين يفضل الاحتفاظ بنسخة احتياطية من الملفات المهمة؟",
+
+                answers: [
+                    "في مكان آمن مثل وحدة تخزين خارجية أو خدمة سحابية موثوقة",
+                    "في موقع مجهول",
+                    "عدم الاحتفاظ بأي نسخة"
+                ],
+
+                correct: 0,
+
+                explanation: "الاحتفاظ بنسخة في مكان آمن يساعد على حماية الملفات."
+            }
+
+        ]
+    }
+
+};
+
+/* ================= حالة التطبيق ================= */
+
+let totalScore = 0;
+
+let currentMission = 1;
+
+let currentQuestion = 0;
+
+let missionScore = 0;
+
+let answered = false;
+
+const completedMissions = new Set();
+
+/* ================= التنقل بين الصفحات ================= */
+
+function showPage(pageId) {
+
+    document.querySelectorAll(".page").forEach(page => {
+        page.classList.remove("active");
+    });
+
+    document.getElementById(pageId).classList.add("active");
+
+    document.querySelectorAll(".nav-btn").forEach(btn => {
+        btn.classList.remove("active");
+    });
+
+    if (pageId === "homePage") {
+        document.querySelectorAll(".nav-btn")[0].classList.add("active");
+    }
+
+    if (
+        pageId === "missionsPage" ||
+        pageId === "quizPage" ||
+        pageId === "resultPage"
+    ) {
+        document.querySelectorAll(".nav-btn")[1].classList.add("active");
+    }
+
+    if (pageId === "certificatePage") {
+        document.querySelectorAll(".nav-btn")[2].classList.add("active");
+    }
+
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
+
+}
+
+/* ================= بدء المهمة ================= */
+
+function startMission(id) {
+
+    currentMission = id;
+
+    currentQuestion = 0;
+
+    missionScore = 0;
+
+    answered = false;
+
+    showPage("quizPage");
+
+    displayQuestion();
+
+}
+
+/* ================= عرض السؤال ================= */
+
+function displayQuestion() {
+
+    const mission = missions[currentMission];
+
+    const questionData = mission.questions[currentQuestion];
+
+    answered = false;
+
+    document.getElementById("quizPageTitle").innerText =
+        mission.title;
+
+    document.getElementById("quizMissionLabel").innerText =
+        mission.icon + " " + mission.title;
+
+    document.getElementById("quizCount").innerText =
+        "السؤال " + (currentQuestion + 1) + " من 3";
+
+    document.getElementById("progressFill").style.width =
+        ((currentQuestion + 1) / 3 * 100) + "%";
+
+    document.getElementById("questionText").innerText =
+        questionData.question;
+
+    const feedback = document.getElementById("feedback");
+
+    feedback.innerText = "";
+
+    feedback.className = "feedback";
+
+    const nextButton = document.getElementById("nextQuestionBtn");
+
+    nextButton.style.display = "none";
+
+    const answersContainer = document.getElementById("answers");
+
+    answersContainer.innerHTML = "";
+
+    questionData.answers.forEach((answer, index) => {
+
+        const button = document.createElement("button");
+
+        button.type = "button";
+
+        button.className = "answer-option";
+
+        button.textContent = answer;
+
+        button.disabled = false;
+
+        button.addEventListener("click", function() {
+
+            checkAnswer(index, button);
+
+        });
+
+        answersContainer.appendChild(button);
+
+    });
+
+}
+
+/* ================= التحقق من الإجابة ================= */
+
+function checkAnswer(selectedIndex, selectedButton) {
+
+    if (answered) {
+        return;
+    }
+
+    answered = true;
+
+    const questionData =
+        missions[currentMission].questions[currentQuestion];
+
+    const allButtons =
+        document.querySelectorAll(".answer-option");
+
+    allButtons.forEach(button => {
+
+        button.disabled = true;
+
+    });
+
+    const feedback = document.getElementById("feedback");
+
+    if (selectedIndex === questionData.correct) {
+
+        selectedButton.classList.add("correct");
+
+        missionScore += 10;
+
+        feedback.innerText =
+            "✓ إجابة صحيحة! " + questionData.explanation;
+
+        feedback.className = "feedback show good";
+
+    } else {
+
+        selectedButton.classList.add("wrong");
+
+        allButtons[questionData.correct].classList.add("correct");
+
+        feedback.innerText =
+            "✗ إجابة غير صحيحة. " + questionData.explanation;
+
+        feedback.className = "feedback show bad";
+
+    }
+
+    const nextButton =
+        document.getElementById("nextQuestionBtn");
+
+    nextButton.style.display = "inline-block";
+
+    if (currentQuestion === 2) {
+
+        nextButton.innerText = "إنهاء المهمة 🏆";
+
+    } else {
+
+        nextButton.innerText = "السؤال التالي ←";
+
+    }
+
+}
+
+/* ================= السؤال التالي ================= */
+
+function nextQuestion() {
+
+    if (!answered) {
+        return;
+    }
+
+    if (currentQuestion < 2) {
+
+        currentQuestion++;
+
+        displayQuestion();
+
+    } else {
+
+        finishMission();
+
+    }
+
+}
+
+/* ================= إنهاء المهمة ================= */
+
+function finishMission() {
+
+    if (!completedMissions.has(currentMission)) {
+
+        totalScore += missionScore;
+
+        completedMissions.add(currentMission);
+
+    }
+
+    document.getElementById("navScore").innerText =
+        totalScore;
+
+    document.getElementById("missionEarned").innerText =
+        missionScore;
+
+    document.getElementById("totalEarned").innerText =
+        totalScore;
+
+    document.getElementById("certificatePoints").innerText =
+        totalScore;
+
+    document.getElementById("resultMessage").innerText =
+        "أنهيت مهمة " + missions[currentMission].title +
+        " بنجاح! استمر في اكتشاف المهارات الرقمية.";
+
+    document.getElementById("status" + currentMission).innerText =
+        "✓ تم إكمال المهمة";
+
+    showPage("resultPage");
+
+}
+
+/* ================= إنشاء الشهادة ================= */
+
+function generateCertificate() {
+
+    const name =
+        document.getElementById("studentName").value.trim();
+
+    if (name === "") {
+
+        alert("فضلاً، أدخل اسمك أولًا.");
+
+        return;
+
+    }
+
+    document.getElementById("certificateName").innerText =
+        name;
+
+    document.getElementById("certificatePoints").innerText =
+        totalScore;
+
+    document.getElementById("certificatePaper").classList.add("show");
+
+}
+
+/* ================= تحديث النقاط ================= */
+
+document.getElementById("navScore").innerText = totalScore;
+
+</script>
+
+</body>
+</html>
